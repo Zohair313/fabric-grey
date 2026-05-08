@@ -243,14 +243,16 @@ section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background 0.4s ease, padding 0.4s ease;
+  transition: background 0.5s ease, backdrop-filter 0.5s ease, padding 0.4s ease, border-color 0.4s ease;
+  background: transparent;
 }
 
 .nav.scrolled {
-  background: rgba(244, 239, 232, 0.92);
-  backdrop-filter: blur(12px);
+  background: rgba(244, 239, 232, 0.12);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
   padding: 1.2rem var(--gutter);
-  border-bottom: 1px solid var(--greige);
+  border-bottom: 1px solid rgba(156, 136, 120, 0.18);
 }
 
 .nav__logo {
@@ -261,10 +263,12 @@ section {
   text-transform: uppercase;
   color: var(--cream);
   transition: color 0.4s;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.25);
 }
 
 .nav.scrolled .nav__logo {
   color: var(--espresso);
+  text-shadow: none;
 }
 
 .nav__links {
@@ -288,6 +292,7 @@ section {
   color: var(--cream);
   transition: color 0.4s, opacity 0.3s;
   position: relative;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.3);
 }
 
 .nav__links a::after {
@@ -307,6 +312,7 @@ section {
 
 .nav.scrolled .nav__links a {
   color: var(--charcoal);
+  text-shadow: none;
 }
 
 .nav__cta {
@@ -315,15 +321,18 @@ section {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--espresso);
-  background: var(--cream);
+  background: rgba(244, 239, 232, 0.9);
   padding: 0.75rem 1.8rem;
-  border: 1px solid transparent;
+  border: 1px solid rgba(244, 239, 232, 0.6);
   transition: all 0.3s;
+  backdrop-filter: blur(4px);
 }
 
 .nav.scrolled .nav__cta {
   background: var(--espresso);
   color: var(--cream);
+  border-color: var(--espresso);
+  backdrop-filter: none;
 }
 
 .nav__cta:hover {
@@ -353,10 +362,12 @@ section {
   cursor: pointer;
   z-index: 1001;
   transition: color 0.3s;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.3);
 }
 
 .nav.scrolled .nav__mobile-toggle {
   color: var(--espresso);
+  text-shadow: none;
 }
 
 @media (max-width: 991px) {
@@ -1692,7 +1703,6 @@ section {
 
 /* ── ABOUT PAGE ── */
 .about-page {
-  padding-top: 120px;
   min-height: 100vh;
 }
 
@@ -1713,7 +1723,7 @@ section {
   color: var(--cream);
   font-style: italic;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .about-story {

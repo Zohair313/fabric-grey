@@ -6,26 +6,32 @@ gsap.registerPlugin(ScrollTrigger)
 
 export function useScrollReveal() {
   useEffect(() => {
-    const elements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .scale-in')
+    const selectors = '.reveal, .reveal-left, .reveal-right, .scale-in'
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry, i) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              entry.target.classList.add('visible')
-            }, i * 80)
-            observer.unobserve(entry.target)
-          }
-        })
-      },
-      { threshold: 0.12, rootMargin: '0px 0px -50px 0px' }
-    )
+    const observe = () => {
+      const elements = document.querySelectorAll(selectors)
 
-    elements.forEach(el => observer.observe(el))
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => {
+                entry.target.classList.add('visible')
+              }, i * 60)
+              observer.unobserve(entry.target)
+            }
+          })
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+      )
 
+      elements.forEach(el => observer.observe(el))
+      return observer
+    }
+
+    const observer = observe()
     return () => observer.disconnect()
-  })
+  }, []) // ← run only once on mount
 }
 
 export function useParallax(ref, speed = 0.3) {

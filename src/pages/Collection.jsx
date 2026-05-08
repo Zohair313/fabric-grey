@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { gsap } from 'gsap'
 import { useScrollReveal, useParallax } from '../hooks/useScrollReveal'
 import Footer from '../components/Footer'
 
@@ -8,10 +7,11 @@ const GREY_PRODUCTS = [
   { id: 101, name: 'Industrial Cotton', category: 'Heavy Duty', weight: '320gsm', stock: '2,400m', image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&q=80&w=800' },
   { id: 102, name: 'Standard Greige', category: 'Raw Material', weight: '180gsm', stock: '1,150m', image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800' },
   { id: 103, name: 'Woven Twill', category: 'Apparel', weight: '220gsm', stock: '850m', image: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&q=80&w=800' },
-  { id: 104, name: 'Canvas Pro', category: 'Technical', weight: '450gsm', stock: '3,200m', image: 'https://images.unsplash.com/photo-1574015974293-817f0efebb1b?auto=format&fit=crop&q=80&w=800' },
+  { id: 104, name: 'Canvas Pro', category: 'Technical', weight: '450gsm', stock: '3,200m', image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&q=80&w=800' },
   { id: 105, name: 'Fine Muslin', category: 'Sheer', weight: '90gsm', stock: '1,200m', image: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&q=80&w=800' },
   { id: 106, name: 'Linen Base', category: 'Natural', weight: '160gsm', stock: '500m', image: 'https://images.unsplash.com/photo-1529139572765-397437ef19b2?auto=format&fit=crop&q=80&w=800' },
 ]
+
 
 const heroFabricBg = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E`
 

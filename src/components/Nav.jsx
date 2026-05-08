@@ -7,8 +7,6 @@ export default function Nav() {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
 
-  const isLight = location.pathname !== '/'
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60)
     window.addEventListener('scroll', onScroll)
@@ -17,14 +15,15 @@ export default function Nav() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-    setIsOpen(false) // Close menu on route change
-  }, [location])
+    setScrolled(false)
+    setIsOpen(false)
+  }, [location.pathname])
 
   return (
     <>
-      <nav className={`nav${scrolled || isLight ? ' scrolled' : ''}`}>
+      <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
         <Link to="/" className="nav__logo">Grey</Link>
-        
+
         {/* Desktop Links */}
         <ul className="nav__links desktop-only">
           <li><Link to="/">Home</Link></li>
@@ -37,9 +36,9 @@ export default function Nav() {
           <Link to="/contact" className="cta-btn nav__cta desktop-only">
             <span>Inquire</span>
           </Link>
-          
-          <button 
-            className="nav__mobile-toggle" 
+
+          <button
+            className="nav__mobile-toggle"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle Menu"
           >
