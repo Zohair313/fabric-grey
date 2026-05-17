@@ -8,6 +8,7 @@ import Contact from './pages/Contact'
 import Faq from './pages/Faq'
 import Preloader from './components/Preloader'
 import Cursor from './components/Cursor'
+import WhatsAppWidget from './components/WhatsAppWidget'
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -50,10 +51,11 @@ function App() {
           `}</style>
 
           <Nav />
+          <WhatsAppWidget />
 
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/collection" element={<Collection />} />
+            <Route path="/stock" element={<Collection />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<Faq />} />

@@ -4,12 +4,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export function useScrollReveal() {
+export function useScrollReveal(deps = []) {
   useEffect(() => {
     const selectors = '.reveal, .reveal-left, .reveal-right, .scale-in'
 
     const observe = () => {
       const elements = document.querySelectorAll(selectors)
+      if (elements.length === 0) return null
 
       const observer = new IntersectionObserver(
         (entries) => {
@@ -30,8 +31,8 @@ export function useScrollReveal() {
     }
 
     const observer = observe()
-    return () => observer.disconnect()
-  }, []) // ← run only once on mount
+    return () => observer && observer.disconnect()
+  }, deps) 
 }
 
 export function useParallax(ref, speed = 0.3) {

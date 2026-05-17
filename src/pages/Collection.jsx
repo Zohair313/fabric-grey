@@ -1,24 +1,67 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 import { useScrollReveal, useParallax } from '../hooks/useScrollReveal'
 import Footer from '../components/Footer'
+import oxford from '../assets/oxford.jpg'
+import poplin from '../assets/poplin.jpg'
+import cambric from '../assets/cambric_new.jpg'
+import canvas from '../assets/canvas_new.jpg'
+import twill31 from '../assets/twill31_new.jpg'
+import twill21 from '../assets/twill21_new.jpg'
 
 const GREY_PRODUCTS = [
-  { id: 101, name: 'Industrial Cotton', category: 'Heavy Duty', weight: '320gsm', stock: '2,400m', image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&q=80&w=800' },
-  { id: 102, name: 'Standard Greige', category: 'Raw Material', weight: '180gsm', stock: '1,150m', image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800' },
-  { id: 103, name: 'Woven Twill', category: 'Apparel', weight: '220gsm', stock: '850m', image: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&q=80&w=800' },
-  { id: 104, name: 'Canvas Pro', category: 'Technical', weight: '450gsm', stock: '3,200m', image: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&q=80&w=800' },
-  { id: 105, name: 'Fine Muslin', category: 'Sheer', weight: '90gsm', stock: '1,200m', image: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&q=80&w=800' },
-  { id: 106, name: 'Linen Base', category: 'Natural', weight: '160gsm', stock: '500m', image: 'https://images.unsplash.com/photo-1529139572765-397437ef19b2?auto=format&fit=crop&q=80&w=800' },
+  { id: 101, name: 'Oxford Weave', category: 'Cotton', weight: '140-150gsm', stock: '2,400m', image: oxford, ref_no: 'OX-4020' },
+  { id: 102, name: 'Poplin Base', category: 'Cotton', weight: '110-120gsm', stock: '1,850m', image: poplin, ref_no: 'PP-4040' },
+  { id: 103, name: 'Cambric Fine', category: 'Cotton', weight: '85gsm', stock: '3,200m', image: cambric, ref_no: 'CB-6060' },
+  { id: 104, name: 'Heavy Canvas', category: 'Cotton', weight: '260-340gsm', stock: '1,400m', image: canvas, ref_no: 'CV-1010' },
+  { id: 105, name: 'Twill 3/1', category: 'Cotton', weight: '250-320gsm', stock: '2,100m', image: twill31, ref_no: 'TW-3116' },
+  { id: 106, name: 'Twill 2/1', category: 'Cotton', weight: '220-240gsm', stock: '2,800m', image: twill21, ref_no: 'TW-2120' },
 ]
 
 
 const heroFabricBg = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E`
 
 export default function Collection() {
-  useScrollReveal()
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [pagination, setPagination] = useState({ next: null, prev: null })
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const fetchProducts = async (page = 1, search = '') => {
+    setLoading(true)
+    try {
+      const response = await axios.get(`http://localhost:8000/api/stocks/?page=${page}&search=${search}`)
+      const rawResults = response.data.results || []
+      const formattedData = rawResults.map(p => ({
+        ...p,
+        image: p.image && typeof p.image === 'string' && !p.image.startsWith('http') 
+          ? `http://localhost:8000${p.image}` 
+          : p.image
+      }))
+      setProducts(formattedData)
+      setPagination({
+        next: response.data.next,
+        prev: response.data.previous,
+        count: response.data.count
+      })
+      setCurrentPage(page)
+      window.scrollTo(0, 0)
+    } catch (error) {
+      console.error("Error fetching products:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
   const heroBgRef = useRef(null)
   useParallax(heroBgRef, 0.2)
+  useScrollReveal([products])
 
   return (
     <main className="grey-coll-page">
@@ -31,7 +74,7 @@ export default function Collection() {
         }
 
         .coll-hero {
-          height: 60vh;
+          height: 100vh;
           position: relative;
           display: flex;
           align-items: center;
@@ -140,32 +183,48 @@ export default function Collection() {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
+          margin-bottom: 2rem;
         }
 
-        .grey-card-name {
-          font-family: 'Cormorant Garamond', serif;
-          font-size: 2.5rem;
-          font-weight: 300;
-          margin-bottom: 0.5rem;
-          line-height: 1;
-        }
-
-        .grey-card-cat {
+        .spec-table {
+          width: 100%;
+          border-top: 1px solid var(--divider);
+          margin-top: 2rem;
           font-size: 0.7rem;
+          letter-spacing: 0.05em;
+        }
+
+        .spec-row {
+          display: grid;
+          grid-template-columns: 140px 1fr;
+          padding: 0.8rem 0;
+          border-bottom: 1px solid var(--divider);
+        }
+
+        .spec-label {
           text-transform: uppercase;
-          letter-spacing: 0.15rem;
-          opacity: 0.6;
+          font-weight: 600;
+          color: var(--taupe);
+          font-size: 0.6rem;
         }
 
-        .grey-card-stats {
+        .spec-value {
+          color: var(--espresso);
           text-align: right;
-          font-size: 0.75rem;
-          opacity: 0.5;
-          letter-spacing: 0.1rem;
         }
 
-        .grey-card-stats div {
-          margin-bottom: 0.3rem;
+        .color-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 0.5rem;
+          margin-top: 1rem;
+        }
+
+        .color-chip {
+          padding: 0.4rem;
+          background: rgba(42, 31, 23, 0.03);
+          border: 1px solid var(--divider);
+          text-align: center;
         }
 
         @media (max-width: 991px) {
@@ -179,39 +238,211 @@ export default function Collection() {
       <section className="coll-hero">
         <div ref={heroBgRef} className="coll-hero-bg" />
         <div className="coll-hero-content">
-          <h1 className="coll-hero-title">The Archive</h1>
+          <h1 className="coll-hero-title">The Stock</h1>
           <p className="coll-hero-meta">Karachi Industrial Excellence</p>
         </div>
       </section>
 
       <div className="coll-container">
-        <div className="coll-filter-bar reveal">
+        <div className="coll-filter-bar reveal" style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'flex-end',
+          gap: '2rem' 
+        }}>
           <div>
-            <span className="filter-label">Currently Showing</span>
-            <div style={{ fontSize: '1.2rem', marginTop: '0.5rem' }}>All Raw Materials (06)</div>
+            {searchQuery ? (
+              <>
+                <span className="filter-label">Search Results</span>
+                <div style={{ fontSize: '1.2rem', marginTop: '0.5rem' }}>
+                  {loading ? 'Searching...' : `Found ${pagination.count || 0} results for "${searchQuery}"`}
+                </div>
+              </>
+            ) : (
+              <>
+                  <div style={{ fontSize: '1.2rem', marginTop: '0.5rem' }}>
+                    {loading ? 'Loading Stock...' : `Total Batches (${pagination.count || '00'})`}
+                  </div>
+              </>
+            )}
           </div>
-          <div className="filter-label">Filtered by Batch Stability</div>
+          
+          <div className="search-box" style={{ flex: '0 1 400px', position: 'relative' }}>
+            <input 
+              type="text" 
+              placeholder="Search by Ref. No or Name..." 
+              value={searchQuery}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchQuery(val);
+                fetchProducts(1, val);
+              }}
+              style={{
+                width: '100%',
+                background: 'none',
+                border: 'none',
+                borderBottom: '1px solid var(--espresso)',
+                padding: '0.75rem 0',
+                fontSize: '0.9rem',
+                fontFamily: 'inherit',
+                color: 'var(--espresso)',
+                outline: 'none',
+                letterSpacing: '0.05em'
+              }}
+            />
+            <span style={{ position: 'absolute', right: '0', bottom: '10px', opacity: 0.4 }}>🔍</span>
+          </div>
         </div>
 
+        {/* Stock Status Notice */}
+        {products.length === 0 && searchQuery !== '' && !loading && (
+          <div className="stock-notice reveal" style={{
+            marginTop: '2rem',
+            padding: '1rem 1.5rem',
+            background: 'rgba(107, 79, 58, 0.05)',
+            borderLeft: '2px solid var(--taupe)',
+            fontSize: '0.75rem',
+            letterSpacing: '0.05em',
+            color: 'var(--espresso)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem'
+          }}>
+            <span style={{ fontWeight: 600, color: 'var(--warm-brown)' }}>● INVENTORY NOTICE</span>
+            <span>No fabrics matching "{searchQuery}" were found. Current batches are in high demand with fluctuating stock levels. Please inquire via WhatsApp for real-time availability.</span>
+          </div>
+        )}
+
         <div className="grey-grid">
-          {GREY_PRODUCTS.map((product, i) => (
-            <Link to="/contact" key={product.id} className="grey-card reveal" style={{ transitionDelay: `${i * 0.1}s` }}>
-              <div className="grey-card-img-wrap">
+          {products.map((product, i) => (
+            <div key={product.id} className="grey-card reveal" style={{ transitionDelay: `${i * 0.1}s`, cursor: 'default' }}>
+              <div className="grey-card-img-wrap" style={{ border: 'none', background: 'var(--greige-mid)' }}>
                 <img src={product.image} alt={product.name} className="grey-card-img" />
                 <div className="grey-card-texture" />
+                <div style={{ 
+                  position: 'absolute', 
+                  top: '1rem', 
+                  right: '1rem', 
+                  padding: '0.4rem 0.8rem', 
+                  background: 'var(--ink)', 
+                  fontSize: '0.6rem', 
+                  letterSpacing: '0.2em', 
+                  textTransform: 'uppercase',
+                  fontWeight: 600,
+                  color: 'white'
+                }}>
+                  Ref: {product.ref_no || 'N/A'}
+                </div>
               </div>
+              
               <div className="grey-card-info">
                 <div>
-                  <div className="grey-card-cat">{product.category}</div>
-                  <h3 className="grey-card-name">{product.name}</h3>
+                  <div className="label" style={{ fontSize: '0.6rem', color: 'var(--gold-leaf)', marginBottom: '0.5rem' }}>Verified {product.is_grey ? 'Grey' : 'Dyed'}</div>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '3rem', fontWeight: 300, lineHeight: 1 }}>{product.name}</h3>
                 </div>
-                <div className="grey-card-stats">
-                  <div>{product.weight}</div>
-                  <div style={{ color: '#4CAF50', opacity: 1 }}>{product.stock} Stock</div>
+                <div style={{ textAlign: 'right' }}>
+                  <div className="label" style={{ fontSize: '0.55rem', opacity: 0.4 }}>Price per meter</div>
+                  <div style={{ color: 'var(--ink)', fontWeight: 600, fontSize: '1.2rem' }}>Rs. {product.price_per_meter}</div>
                 </div>
               </div>
-            </Link>
+
+              <div className="spec-table">
+                <div className="spec-row">
+                  <span className="spec-label">Composition</span>
+                  <span className="spec-value">{product.composition || 'Standard Blend'}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Construction</span>
+                  <span className="spec-value">{product.construction || 'Woven'}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Fabric Width</span>
+                  <span className="spec-value">{product.fabric_width || '58"'}</span>
+                </div>
+                <div className="spec-row">
+                  <span className="spec-label">Finish / Process</span>
+                  <span className="spec-value">{product.finish} {product.special_process ? `(${product.special_process})` : ''}</span>
+                </div>
+              </div>
+
+              {product.is_dyed && product.colors && product.colors.length > 0 && (
+                <div style={{ marginTop: '2rem' }}>
+                  <div className="label" style={{ fontSize: '0.6rem', marginBottom: '1rem' }}>Available Dyed Inventory</div>
+                  <div className="color-grid">
+                    {product.colors.map((c, idx) => (
+                      <div key={idx} className="color-chip">
+                        <div style={{ fontSize: '0.55rem', fontWeight: 600 }}>{c.color_name}</div>
+                        <div style={{ fontSize: '0.5rem', opacity: 0.6 }}>{c.quantity}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.6rem', color: 'var(--taupe)' }}>Validity: {product.validity_days} Days</div>
+                <a href="mailto:info@greyfabric.store" className="collection__link" style={{ fontSize: '0.7rem' }}>Request Sample →</a>
+              </div>
+            </div>
           ))}
+        </div>
+
+        {/* Pagination Controls */}
+        <div className="coll-pagination" style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '2rem',
+          padding: '4rem 0 8rem',
+          borderTop: '1px solid rgba(42, 31, 23, 0.05)'
+        }}>
+          <button 
+            onClick={() => fetchProducts(currentPage - 1, searchQuery)}
+            disabled={!pagination.prev}
+            className="pagination-btn"
+            style={{
+              opacity: pagination.prev ? 1 : 0.3,
+              pointerEvents: pagination.prev ? 'auto' : 'none',
+              background: 'none',
+              border: 'none',
+              fontSize: '0.8rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: 'var(--espresso)'
+            }}
+          >
+            ← Prev
+          </button>
+          
+          <span style={{ fontSize: '0.75rem', opacity: 0.5, letterSpacing: '0.1em', color: 'var(--espresso)' }}>
+            PAGE {currentPage}
+          </span>
+
+          <button 
+            onClick={() => fetchProducts(currentPage + 1, searchQuery)}
+            disabled={!pagination.next}
+            className="pagination-btn"
+            style={{
+              opacity: pagination.next ? 1 : 0.3,
+              pointerEvents: pagination.next ? 'auto' : 'none',
+              background: 'none',
+              border: 'none',
+              fontSize: '0.8rem',
+              letterSpacing: '0.2em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              color: 'var(--espresso)'
+            }}
+          >
+            Next →
+          </button>
         </div>
       </div>
 

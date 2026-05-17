@@ -26,7 +26,7 @@ export default function Contact() {
         }
 
         .contact-hero {
-          height: 50vh;
+          height: 100vh;
           position: relative;
           display: flex;
           align-items: center;
@@ -170,8 +170,15 @@ export default function Contact() {
 
       <section className="contact-hero">
         <div ref={heroBgRef} className="contact-hero-bg" />
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          <h2 style={{ color: 'var(--cream)', textTransform: 'uppercase', letterSpacing: '1rem', fontSize: '1rem', fontWeight: 300 }}>Get In Touch</h2>
+        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
+          <h1 style={{ 
+            fontFamily: "'Cormorant Garamond', serif",
+            fontSize: 'clamp(4rem, 10vw, 8rem)',
+            fontWeight: 300,
+            color: 'var(--cream)',
+            margin: 0,
+            fontStyle: 'italic'
+          }}>Get In Touch</h1>
         </div>
       </section>
 
@@ -186,7 +193,7 @@ export default function Contact() {
 
           <div className="info-group reveal">
             <span className="info-label">Communication</span>
-            <div className="info-value">office@greyfabric.co <br/> +92 322 2548132</div>
+            <div className="info-value">info@greyfabric.store <br/> +92 322 2548132</div>
           </div>
 
           <div className="info-group reveal">

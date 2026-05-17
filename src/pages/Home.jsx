@@ -1,8 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
+import fabric1 from '../assets/1.png'
+import fabric1a from '../assets/1a.png'
+import fabric2 from '../assets/2.png'
+import fabric3 from '../assets/3.png'
+import fabric4 from '../assets/4.png'
+import fabric5 from '../assets/5.png'
 import { Link } from 'react-router-dom'
+
+import { FiInstagram, FiFacebook, FiMail, FiPhone, FiGrid, FiLayers, FiBox, FiTag, FiShoppingBag, FiTruck } from 'react-icons/fi'
 import { useScrollReveal, useParallax } from '../hooks/useScrollReveal'
 import Footer from '../components/Footer'
+import lookbookFull from '../assets/lookbook_full.png'
+import look6 from '../assets/6.jpg'
 
 // Color swatches matching greige/fabric palette
 const SWATCHES = [
@@ -10,51 +23,59 @@ const SWATCHES = [
   { color: '#C8B9A8', name: 'Greige' },
   { color: '#9C8878', name: 'Taupe' },
   { color: '#6B4F3A', name: 'Camel' },
-  { color: '#2A1F17', name: 'Espresso' },
+  { color: '#467f8dff', name: 'Espresso' },
   { color: '#B5A898', name: 'Linen' },
 ]
 
 const FABRICS = [
   {
-    name: 'Raw Cotton',
-    meta: '100% Cotton · 140gsm',
-    tag: 'Woven',
-    bg: '#C8B9A8',
+    name: 'Oxford Weave',
+    meta: '40x20 / 120x60 · 140-150gsm',
+    tag: 'Cotton',
+    bg: '#E8DFD0',
+    image: fabric2,
     stock: '2,400m',
-    textureStyle: {
-      background: 'repeating-linear-gradient(45deg, #C8B9A8 0px, #BEAe9D 2px, #C8B9A8 4px)',
-    },
   },
   {
-    name: 'Linen Greige',
-    meta: 'Linen Blend · 180gsm',
-    tag: 'Natural',
+    name: 'Poplin Base',
+    meta: '40x40 / 133x72 · 110-120gsm',
+    tag: 'Cotton',
+    bg: '#C8B9A8',
+    image: fabric3,
+    stock: '1,850m',
+  },
+  {
+    name: 'Cambric Fine',
+    meta: '60x60 / 90x88 · 85gsm',
+    tag: 'Cotton',
     bg: '#D4C4B0',
-    stock: '1,150m',
-    textureStyle: {
-      background: 'repeating-linear-gradient(0deg, #D4C4B0 0px, #CAB8A2 3px, #D4C4B0 6px)',
-    },
-  },
-  {
-    name: 'Muslin Base',
-    meta: 'Fine Cotton · 90gsm',
-    tag: 'Sheer',
-    bg: '#E2D9CC',
-    stock: '850m',
-    textureStyle: {
-      background: 'repeating-linear-gradient(90deg, #E2D9CC 0px, #D8CEBF 2px, #E2D9CC 4px)',
-    },
+    image: fabric4,
+    stock: '3,200m',
   },
   {
     name: 'Heavy Canvas',
-    meta: 'Cotton Canvas · 320gsm',
-    tag: 'Structured',
+    meta: '10x10 / 72x40 · 260-340gsm',
+    tag: 'Cotton',
     bg: '#9C8878',
-    stock: '3,200m',
-    textureStyle: {
-      background: 'repeating-linear-gradient(45deg, #9C8878 0px, #8E7A6A 3px, #9C8878 6px)',
-    },
+    image: fabric5,
+    stock: '1,400m',
   },
+  {
+    name: 'Twill 3/1',
+    meta: '16x12 / 108x56 · 250-320gsm',
+    tag: 'Cotton',
+    bg: '#B5A898',
+    image: fabric2,
+    stock: '2,100m',
+  },
+  {
+    name: 'Twill 2/1',
+    meta: '20x16 / 128x60 · 220-240gsm',
+    tag: 'Cotton',
+    bg: '#E2D9CC',
+    image: fabric3,
+    stock: '2,800m',
+  }
 ]
 
 const TESTIMONIALS = [
@@ -107,24 +128,17 @@ const CountUp = ({ end, suffix = '', duration = 2.5 }) => {
 }
 
 export default function Home() {
-  useScrollReveal()
   const heroBgRef = useRef(null)
   const heroHeadRef = useRef(null)
   const [activeTestimonial, setActiveTestimonial] = useState(0)
   const [heroColor, setHeroColor] = useState('#2A1F17')
   const vantaRef = useRef(null)
   const [vantaEffect, setVantaEffect] = useState(null)
-  const [fabrics, setFabrics] = useState([
-    { name: 'Industrial Cotton', weight: '320gsm', tag: 'Heavy Duty', stock: '2,400m', image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&q=80&w=800' },
-    { name: 'Standard Greige', weight: '180gsm', tag: 'Raw Material', stock: '1,150m', image: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800' },
-    { name: 'Woven Twill', weight: '220gsm', tag: 'Apparel', stock: '850m', image: 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&q=80&w=800' },
-    { name: 'Canvas Pro', weight: '450gsm', tag: 'Technical', stock: '3,200m', image: 'https://images.unsplash.com/photo-1574015974293-817f0efebb1b?auto=format&fit=crop&q=80&w=800' }
-  ])
 
-  const getImageUrl = (url) => url;
 
   // Parallax on hero fabric bg
   useParallax(heroBgRef, 0.25)
+  useScrollReveal()
 
   // Hero entrance animation
   useEffect(() => {
@@ -142,16 +156,42 @@ export default function Home() {
     const t = setInterval(() => {
       setActiveTestimonial(i => (i + 1) % TESTIMONIALS.length)
     }, 5000)
-    return () => clearInterval(t)
+    // GSAP CountUp implementation
+    const stats = [
+      { id: '#stat-weights', end: 40, suffix: '+' },
+      { id: '#stat-metres', end: 8, suffix: 'M+' }
+    ];
+
+    stats.forEach(stat => {
+      const el = document.querySelector(stat.id);
+      if (el) {
+        gsap.to({ val: 0 }, {
+          val: stat.end,
+          duration: 2,
+          scrollTrigger: {
+            trigger: el,
+            start: "top 90%",
+          },
+          onUpdate: function () {
+            el.textContent = Math.ceil(this.targets()[0].val) + stat.suffix;
+          }
+        });
+      }
+    });
+
+    return () => {
+      clearInterval(t)
+      ScrollTrigger.getAll().forEach(t => t.kill())
+    }
   }, [])
 
-  // Vanta.js Topology Init
+  // Vanta.js Birds Init
   useEffect(() => {
     if (vantaEffect) vantaEffect.destroy()
 
-    if (window.VANTA && window.VANTA.TOPOLOGY) {
+    if (window.VANTA && window.VANTA.BIRDS) {
       setVantaEffect(
-        window.VANTA.TOPOLOGY({
+        window.VANTA.BIRDS({
           el: vantaRef.current,
           mouseControls: true,
           touchControls: true,
@@ -160,7 +200,6 @@ export default function Home() {
           minWidth: 200.00,
           scale: 1.00,
           scaleMobile: 1.00,
-          color: 0xffffff, // White lines for dark theme
           backgroundColor: parseInt(heroColor.replace('#', ''), 16),
           backgroundAlpha: 0.0 // Transparent to show fabric texture
         })
@@ -175,8 +214,7 @@ export default function Home() {
     <main>
       {/* ── HERO ── */}
       <section className="hero" id="hero">
-        <div className="hero__bg">
-          {/* Woven texture via SVG noise + CSS pattern */}
+        <div className="hero__bg blueprint-grid">
           <div
             ref={heroBgRef}
             style={{
@@ -186,12 +224,12 @@ export default function Home() {
               backgroundColor: heroColor,
               backgroundImage: `
                 url("${heroFabricBg}"),
-                repeating-linear-gradient(0deg, rgba(42,31,23,0) 0px, rgba(42,31,23,0) 3px, rgba(200,185,168,0.08) 3px, rgba(200,185,168,0.08) 4px),
-                repeating-linear-gradient(90deg, rgba(42,31,23,0) 0px, rgba(42,31,23,0) 3px, rgba(200,185,168,0.08) 3px, rgba(200,185,168,0.08) 4px),
-                radial-gradient(ellipse at 30% 60%, ${heroColor} 0%, color-mix(in srgb, ${heroColor}, black 40%) 100%)
+                repeating-linear-gradient(0deg, rgba(244,239,232,0.03) 0px, rgba(244,239,232,0.03) 1px, transparent 1px, transparent 40px),
+                repeating-linear-gradient(90deg, rgba(244,239,232,0.03) 0px, rgba(244,239,232,0.03) 1px, transparent 1px, transparent 40px),
+                radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.3) 100%)
               `,
-              backgroundSize: '400px 400px, 8px 8px, 8px 8px, 100% 100%',
-              transition: 'background 0.5s ease',
+              backgroundSize: '400px 400px, 40px 40px, 40px 40px, 100% 100%',
+              transition: 'background 0.8s cubic-bezier(0.19, 1, 0.22, 1)',
             }}
           />
         </div>
@@ -217,10 +255,12 @@ export default function Home() {
           </div>
 
           <div className="hero__right">
-            <p className="hero__meta">
-              Grey greige fabric — the origin material.<br />
-              Undyed. Unprocessed. Ready for your vision.
+            <div className="label" style={{ color: 'var(--gold-leaf)', marginBottom: '1rem' }}>Original Greige · Karachi</div>
+            <p className="hero__meta" style={{ fontSize: '1.1rem', letterSpacing: '0.05em', color: 'var(--cream)', opacity: 0.8 }}>
+              Specializing in industrial greige since 2019.<br />
+              Precision weaving for the discerning vision.
             </p>
+            <div className="blueprint-line" style={{ background: 'rgba(255,255,255,0.1)', margin: '1.5rem 0' }} />
             <div className="hero__swatches">
               {SWATCHES.map((s, i) => (
                 <div
@@ -228,9 +268,10 @@ export default function Home() {
                   className="hero__swatch"
                   style={{
                     background: s.color,
-                    borderColor: s.color === heroColor ? 'var(--cream)' : 'rgba(255,255,255,0.15)'
+                    width: '28px',
+                    height: '28px',
+                    borderColor: s.color === heroColor ? 'var(--gold-leaf)' : 'rgba(255,255,255,0.1)'
                   }}
-                  title={s.name}
                   onClick={() => setHeroColor(s.color)}
                 />
               ))}
@@ -248,7 +289,10 @@ export default function Home() {
           ref={vantaRef}
           style={{
             position: 'absolute',
-            inset: 0,
+            top: '15%',
+            bottom: '-15%',
+            left: 0,
+            right: 0,
             zIndex: 1,
             pointerEvents: 'none',
           }}
@@ -276,60 +320,46 @@ export default function Home() {
         <div className="about">
           <div className="reveal-left">
             <div className="about__label">
-              <span className="label">Our Origin</span>
+              <span className="label" style={{ color: 'var(--gold-leaf)' }}>Legacy & Craft</span>
             </div>
-            <h2 className="about__heading">
-              Fabric in its<br /><em>truest form</em>
+            <h2 className="about__heading" style={{ fontSize: '4.5rem' }}>
+              Fabric in its<br /><em className="serif-italic">purest origin</em>
             </h2>
-            <p className="about__body">
+            <div className="blueprint-line" style={{ width: '60px', margin: '2rem 0' }} />
+            <p className="about__body text-justify">
               Grey fabric — or greige — is textile in its most honest state.
-              No dyes. No finishes. No masking. It is the raw canvas that
-              every garment, every upholstered chair, every home textile begins
-              from. We source, mill, and supply greige at the standard that
-              serious designers demand.
+              Founded in 2019, our Pakistan-based mill focuses on the raw canvas that
+              every high-end collection begins from. We preserve the natural character
+              of the fibre, ensuring that every metre supplied meets the rigid
+              standards of the global textile industry.
             </p>
-            <div className="about__stat-row">
+            <div className="about__stat-row" style={{ borderTop: 'none', padding: 0, gap: '4rem' }}>
               <div>
-                <div className="about__stat-num"><CountUp end={40} suffix="+" /></div>
-                <div className="about__stat-label">Fabric Weights</div>
+                <div className="about__stat-num" id="stat-weights">0+</div>
+                <div className="label" style={{ fontSize: '0.6rem' }}>Fabric Weights</div>
               </div>
               <div>
-                <div className="about__stat-num"><CountUp end={12} suffix="yr" /></div>
-                <div className="about__stat-label">In the Industry</div>
-              </div>
-              <div>
-                <div className="about__stat-num"><CountUp end={8} suffix="M+" /></div>
-                <div className="about__stat-label">Metres Supplied</div>
+                <div className="about__stat-num" id="stat-metres">0M+</div>
+                <div className="label" style={{ fontSize: '0.6rem' }}>Metres Supplied</div>
               </div>
             </div>
           </div>
 
-          <div className="about__image-wrap reveal-right">
-            {/* Fabric-texture generated image placeholder */}
-            <div style={{
-              width: '100%',
-              height: '100%',
-              background: `
-                repeating-linear-gradient(45deg, #C8B9A8 0px, #BFB09F 2px, #C8B9A8 8px, #D4C4B0 8px, #CBB9A5 10px, #D4C4B0 16px),
-                repeating-linear-gradient(-45deg, rgba(100,80,60,0.12) 0px, transparent 4px)
-              `,
-              backgroundSize: '22px 22px, 22px 22px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <div style={{
-                textAlign: 'center',
-                padding: '3rem',
-                background: 'rgba(244,239,232,0.85)',
-              }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--espresso)', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                  Greige Weave
-                </div>
-                <div className="label">Cotton · 140gsm · 58" Width</div>
+          <div className="about__image-wrap reveal-right" style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '20px', background: 'transparent' }}>
+            <div className="about__fabric-card" style={{ position: 'relative', overflow: 'hidden' }}>
+              <img src={fabric2} alt="Oxford Fabric" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(244,239,232,0.9)', padding: '10px 15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="label" style={{ fontSize: '0.65rem', fontWeight: 800 }}>Oxford: 40x20 / 120x60</span>
+                <span className="label" style={{ fontSize: '0.65rem' }}>140-150 GSM</span>
               </div>
             </div>
-            <div className="about__image-tag">Est. 2013 · Lahore, Pakistan</div>
+            <div className="about__fabric-card" style={{ position: 'relative', overflow: 'hidden' }}>
+              <img src={fabric3} alt="Poplin Fabric" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(244,239,232,0.9)', padding: '10px 15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="label" style={{ fontSize: '0.65rem', fontWeight: 800 }}>Poplin: 40x40 / 133x72</span>
+                <span className="label" style={{ fontSize: '0.65rem' }}>110-120 GSM</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -337,13 +367,16 @@ export default function Home() {
       {/* ── COLLECTION ── */}
       <section className="collection">
         <div className="collection__header">
-          <h2 className="collection__heading">Our Fabrics</h2>
-          <Link to="/collection" className="collection__link">View All →</Link>
+          <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+            <a href="mailto:info@greyfabric.store" className="collection__link" style={{ fontSize: '0.8rem' }}>Direct Inquiry →</a>
+            <Link to="/stock" className="collection__link">Explore Stock →</Link>
+          </div>
         </div>
         <div className="collection__grid">
-          {(fabrics.length > 0 ? fabrics : FABRICS).map((fabric, i) => {
-            const imageUrl = getImageUrl(fabric.image);
-            const fabricColor = fabric.color || '#E2D9CC';
+          {FABRICS.slice(0, 4).map((fabric, i) => {
+            const defaultColors = ['#C8B9A8', '#D4C4B0', '#E2D9CC', '#9C8878'];
+            const imageUrl = fabric.image;
+            const fabricColor = fabric.color || fabric.bg || defaultColors[i % defaultColors.length];
             const texture = `repeating-linear-gradient(45deg, ${fabricColor} 0px, rgba(0,0,0,0.05) 2px, ${fabricColor} 4px)`;
 
             return (
@@ -402,70 +435,44 @@ export default function Home() {
               to final quality inspection — before it reaches your production line.
             </p>
           </div>
-          <div className="process__steps">
+          <div className="process__steps" style={{ display: 'flex', flexDirection: 'column', gap: '0', border: 'none' }}>
             {[
               { n: '01', title: 'Fibre Selection', text: 'We source cotton and linen from trusted farms, selecting only fibres that meet our density and purity benchmarks.' },
               { n: '02', title: 'Weaving', text: 'Woven on industrial looms calibrated for consistent thread count, selvedge alignment, and weight uniformity.' },
               { n: '03', title: 'Grey State', text: 'The cloth is kept in its greige state — no bleach, no dye, no sizing compounds — preserving natural character.' },
               { n: '04', title: 'Quality & Dispatch', text: 'Every batch is inspected for defects, tension, and GSM before being rolled, labelled, and dispatched.' },
             ].map((step, i) => (
-              <div key={i} className="process__step reveal" style={{ transitionDelay: `${i * 0.15}s` }}>
-                <div className="process__step-line" />
-                <div className="process__step-num">{step.n}</div>
-                <div className="process__step-title">{step.title}</div>
-                <p className="process__step-text">{step.text}</p>
+              <div key={i} className="process__step reveal" style={{
+                display: 'grid',
+                gridTemplateColumns: '120px 1fr 300px',
+                gap: '4rem',
+                padding: '4rem 0',
+                borderTop: '1px solid var(--divider)',
+                alignItems: 'center'
+              }}>
+                <div className="process__step-num" style={{ fontSize: '3rem', margin: 0 }}>{step.n}</div>
+                <div>
+                  <div className="process__step-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{step.title}</div>
+                  <div className="label" style={{ fontSize: '0.6rem', color: 'var(--gold-leaf)' }}>Protocol Verified</div>
+                </div>
+                <p className="process__step-text" style={{ textAlign: 'right', margin: 0 }}>{step.text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── LOOKBOOK / COLOUR ── */}
-      <section className="lookbook">
-        <h2 className="lookbook__heading reveal">The Colour of Raw</h2>
-
-        <div className="lookbook__grid">
-          {/* Large featured texture */}
-          {[
-            { bg: 'linear-gradient(135deg, #C8B9A8 0%, #BFB09F 50%, #B5A696 100%)', label: 'Natural Ecru' },
-            { bg: 'repeating-linear-gradient(45deg, #D4C4B0 0px, #CBB9A5 4px, #D4C4B0 8px)', label: 'Linen Weave' },
-            { bg: 'radial-gradient(circle at 40% 40%, #E2D9CC, #C8B9A8)', label: 'Cotton Voile' },
-            { bg: 'repeating-linear-gradient(0deg, #9C8878 0px, #8E7A6A 3px, #9C8878 10px)', label: 'Raw Canvas' },
-            { bg: 'linear-gradient(160deg, #6B4F3A, #5A4030)', label: 'Heavy Drill' },
-          ].map((cell, i) => (
-            <div key={i} className="lookbook-cell reveal scale-in" style={{ transitionDelay: `${i * 0.12}s` }}>
-              <div style={{
-                width: '100%',
-                height: '100%',
-                background: cell.bg,
-                backgroundSize: '20px 20px',
-                display: 'flex',
-                alignItems: 'flex-end',
-                padding: '1.5rem',
-              }}>
-                <span style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.65rem',
-                  letterSpacing: '0.2em',
-                  textTransform: 'uppercase',
-                  color: i > 2 ? 'rgba(244,239,232,0.7)' : 'rgba(42,31,23,0.6)',
-                }}>
-                  {cell.label}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Swatch palette */}
-        <div className="lookbook__swatch-row reveal">
-          {SWATCHES.map((s, i) => (
-            <div key={i} className="lookbook__swatch-item">
-              <div className="lookbook__swatch-circle" style={{ background: s.color }} />
-              <span className="lookbook__swatch-name">{s.name}</span>
-            </div>
-          ))}
-        </div>
+      {/* ── LOOKBOOK / THE COLOUR OF RAW ── */}
+      <section className="lookbook" style={{ padding: 0, background: '#fff', overflow: 'hidden' }}>
+        <img 
+          src={look6} 
+          alt="Lookbook Detail" 
+          style={{ 
+            width: '100%', 
+            height: 'auto', 
+            display: 'block'
+          }} 
+        />
       </section>
 
       {/* ── TESTIMONIALS ── */}
@@ -502,8 +509,8 @@ export default function Home() {
           Grey delivers consistent greige at every scale.
         </p>
         <div className="reveal">
-          <Link to="/contact" className="cta-btn"><span>Request Samples</span></Link>
-          <Link to="/collection" className="cta-btn-outline">Browse Fabrics</Link>
+          <a href="mailto:info@greyfabric.store" className="cta-btn"><span>Request Samples</span></a>
+          <Link to="/stock" className="cta-btn-outline">Browse Stock</Link>
         </div>
       </section>
 
@@ -511,3 +518,5 @@ export default function Home() {
     </main>
   )
 }
+
+

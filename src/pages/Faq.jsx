@@ -41,7 +41,7 @@ export default function Faq() {
 
   return (
     <main className="about-page">
-      <div className="about-page__hero" style={{ height: '45vh' }}>
+      <div className="about-page__hero" style={{ height: '100vh' }}>
         <h1 className="about-page__title">FAQs</h1>
       </div>
 

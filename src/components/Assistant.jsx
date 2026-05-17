@@ -1,12 +1,23 @@
 import { useState, useEffect, useCallback } from 'react'
 import assistantImg from '../assets/assistant.png'
 
-const WHATSAPP_LINK = 'https://wa.me/923222548132?text=Hi!%20I%27m%20interested%20in%20your%20discounted%20fabric%20prices.'
-
 export default function Assistant() {
   const [side, setSide] = useState('right')
   const [isVisible, setIsVisible] = useState(false)
   const [showBubble, setShowBubble] = useState(false)
+  const [whatsappLink, setWhatsappLink] = useState('https://wa.me/923001234567?text=Hi!%20I%27m%20interested%20in%20your%20discounted%20fabric%20prices.')
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/settings/')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.whatsapp_number) {
+          const message = data.default_message || "Hi! I'm interested in your discounted fabric prices."
+          setWhatsappLink(`https://wa.me/${data.whatsapp_number}?text=${encodeURIComponent(message)}`)
+        }
+      })
+      .catch(err => console.error("Error fetching WhatsApp settings:", err))
+  }, [])
   
   // Decide side on load
   useEffect(() => {
@@ -53,7 +64,7 @@ export default function Assistant() {
     setShowBubble(true)
 
     // Open WhatsApp
-    window.open(WHATSAPP_LINK, '_blank')
+    window.open(whatsappLink, '_blank')
   }, [])
 
   return (
@@ -63,7 +74,7 @@ export default function Assistant() {
         <div className="assistant-content">
           {showBubble && (
             <div className={`speech-bubble side-${side}`}>
-              We have discounted prices! <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer">Chat with us</a>
+              We have discounted prices! <a href={whatsappLink} target="_blank" rel="noreferrer">Chat with us</a>
               <div className="bubble-arrow" />
             </div>
           )}

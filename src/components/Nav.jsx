@@ -22,12 +22,12 @@ export default function Nav() {
   return (
     <>
       <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
-        <Link to="/" className="nav__logo">Grey</Link>
+        <Link to="/" className="nav__logo" style={{ textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 800 }}>GR<span className="logo-e">E</span>Y</Link>
 
         {/* Desktop Links */}
         <ul className="nav__links desktop-only">
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/collection">Collection</Link></li>
+          <li><Link to="/stock">Stock</Link></li>
           <li><Link to="/about">About</Link></li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
@@ -49,10 +49,27 @@ export default function Nav() {
 
       {/* Mobile Menu Overlay */}
       <div className={`nav__mobile-menu ${isOpen ? 'active' : ''}`}>
+        <button
+          className="nav__mobile-close"
+          onClick={() => setIsOpen(false)}
+          style={{
+            position: 'absolute',
+            top: '30px',
+            right: '30px',
+            background: 'none',
+            border: 'none',
+            color: 'var(--cream)',
+            fontSize: '2rem',
+            cursor: 'pointer',
+            zIndex: 100
+          }}
+        >
+          <FiX />
+        </button>
         <div className="nav__mobile-content">
           <ul className="nav__mobile-links">
             <li><Link to="/" onClick={() => setIsOpen(false)}>Home</Link></li>
-            <li><Link to="/collection" onClick={() => setIsOpen(false)}>Collection</Link></li>
+            <li><Link to="/stock" onClick={() => setIsOpen(false)}>Stock</Link></li>
             <li><Link to="/about" onClick={() => setIsOpen(false)}>About</Link></li>
             <li><Link to="/contact" onClick={() => setIsOpen(false)}>Contact</Link></li>
             <li><Link to="/faq" onClick={() => setIsOpen(false)}>FAQ</Link></li>
