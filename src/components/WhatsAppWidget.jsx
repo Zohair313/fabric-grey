@@ -6,8 +6,8 @@ import { FaWhatsapp } from 'react-icons/fa'
 const WhatsAppWidget = () => {
   const [settings, setSettings] = useState({
     karachi_number: "923222548132",
-    lahore_number: "923001234567",
-    faisalabad_number: "923111234567",
+    lahore_number: "+92 326 0808232",
+    faisalabad_number: "+92 333 4060683",
     default_message: "Hello GRËY! I am interested in your fabric collections."
   })
 
