@@ -56,7 +56,7 @@ export default function Footer() {
             <li><a href="mailto:info@greyfabric.store">info@greyfabric.store</a></li>
             <li><a href="tel:+923222548132">+92 322 2548132</a></li>
             <li style={{ color: 'var(--taupe)', fontSize: '0.85rem', lineHeight: 1.6 }}>
-              Lahore, Punjab<br />Pakistan
+              Karachi, Faisalabad<br />Lahore
             </li>
           </ul>
         </div>

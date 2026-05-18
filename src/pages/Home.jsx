@@ -37,7 +37,7 @@ const FABRICS = [
     stock: '2,400m',
   },
   {
-    name: 'Poplin Base',
+    name: 'Base',
     meta: '40x40 / 133x72 · 110-120gsm',
     tag: 'Cotton',
     bg: '#C8B9A8',
