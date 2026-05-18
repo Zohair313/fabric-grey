@@ -255,7 +255,7 @@ export default function Home() {
           </div>
 
           <div className="hero__right">
-            <div className="label" style={{ color: 'var(--gold-leaf)', marginBottom: '1rem' }}>Original Greige · Karachi</div>
+            <div className="label" style={{ color: 'var(--gold-leaf)', marginBottom: '1rem' }}>Original Greige</div>
             <p className="hero__meta" style={{ fontSize: '1.1rem', letterSpacing: '0.05em', color: 'var(--cream)', opacity: 0.8 }}>
               Specializing in industrial greige since 2019.<br />
               Precision weaving for the discerning vision.
