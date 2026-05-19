@@ -8,7 +8,7 @@ export default function Assistant() {
   const [whatsappLink, setWhatsappLink] = useState('https://wa.me/923001234567?text=Hi!%20I%27m%20interested%20in%20your%20discounted%20fabric%20prices.')
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/settings/')
+    fetch('http://greyfabric.store/backend/api/settings/')
       .then(res => res.json())
       .then(data => {
         if (data && data.whatsapp_number) {

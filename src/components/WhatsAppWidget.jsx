@@ -12,7 +12,7 @@ const WhatsAppWidget = () => {
   })
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/settings/')
+    fetch('http://greyfabric.store/backend/api/settings/')
       .then(res => res.json())
       .then(data => {
         if (data && (data.karachi_number || data.lahore_number || data.faisalabad_number)) {

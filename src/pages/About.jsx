@@ -114,6 +114,13 @@ export default function About() {
         padding: '6rem var(--gutter)',
         textAlign: 'center',
       }}>
+        <style>{`
+          .about-cta-section .cta-btn:hover {
+            color: var(--cream) !important;
+            border-color: var(--cream) !important;
+            background: transparent !important;
+          }
+        `}</style>
         <h2 style={{
           fontFamily: 'var(--font-display)',
           fontSize: 'clamp(2rem, 4vw, 5rem)',
@@ -124,7 +131,9 @@ export default function About() {
         }} className="reveal">
           Let's build something together
         </h2>
-        <Link to="/contact" className="cta-btn reveal"><span>Get in Touch</span></Link>
+        <div className="about-cta-section">
+          <Link to="/contact" className="cta-btn reveal"><span>Get in Touch</span></Link>
+        </div>
       </div>
 
       <Footer />

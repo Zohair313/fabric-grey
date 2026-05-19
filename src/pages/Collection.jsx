@@ -33,12 +33,12 @@ export default function Collection() {
   const fetchProducts = async (page = 1, search = '') => {
     setLoading(true)
     try {
-      const response = await axios.get(`http://localhost:8000/api/stocks/?page=${page}&search=${search}`)
+      const response = await axios.get(`http://greyfabric.store/backend/api/stocks/?page=${page}&search=${search}`)
       const rawResults = response.data.results || []
       const formattedData = rawResults.map(p => ({
         ...p,
         image: p.image && typeof p.image === 'string' && !p.image.startsWith('http') 
-          ? `http://localhost:8000${p.image}` 
+          ? `http://greyfabric.store/backend${p.image}` 
           : p.image
       }))
       setProducts(formattedData)
