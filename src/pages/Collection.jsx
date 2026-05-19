@@ -28,6 +28,7 @@ export default function Collection() {
   const [pagination, setPagination] = useState({ next: null, prev: null })
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const fetchProducts = async (page = 1, search = '') => {
     setLoading(true)
@@ -168,6 +169,40 @@ export default function Collection() {
 
         .grey-card:hover .grey-card-img {
           transform: scale(1.05);
+        }
+
+        .collection__link:hover {
+          color: var(--espresso) !important;
+          border-color: var(--espresso) !important;
+        }
+
+        .img-popup-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(42, 31, 23, 0.95);
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem;
+          cursor: zoom-out;
+        }
+
+        .img-popup-content {
+          max-width: 90vw;
+          max-height: 90vh;
+          object-fit: contain;
+          box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+          cursor: default;
+        }
+
+        .img-popup-close {
+          position: absolute;
+          top: 2rem;
+          right: 2rem;
+          color: var(--cream);
+          font-size: 2rem;
+          cursor: pointer;
         }
 
         .grey-card-texture {
@@ -316,7 +351,11 @@ export default function Collection() {
         <div className="grey-grid">
           {products.map((product, i) => (
             <div key={product.id} className="grey-card reveal" style={{ transitionDelay: `${i * 0.1}s`, cursor: 'default' }}>
-              <div className="grey-card-img-wrap" style={{ border: 'none', background: 'var(--greige-mid)' }}>
+              <div 
+                onClick={() => setSelectedImage(product.image)}
+                className="grey-card-img-wrap" 
+                style={{ border: 'none', background: 'var(--greige-mid)', display: 'block', cursor: 'zoom-in' }}
+              >
                 <img src={product.image} alt={product.name} className="grey-card-img" />
                 <div className="grey-card-texture" />
                 <div style={{ 
@@ -329,7 +368,8 @@ export default function Collection() {
                   letterSpacing: '0.2em', 
                   textTransform: 'uppercase',
                   fontWeight: 600,
-                  color: 'white'
+                  color: 'white',
+                  zIndex: 2
                 }}>
                   Ref: {product.ref_no || 'N/A'}
                 </div>
@@ -445,6 +485,19 @@ export default function Collection() {
           </button>
         </div>
       </div>
+
+      {/* Image Popup Modal */}
+      {selectedImage && (
+        <div className="img-popup-overlay" onClick={() => setSelectedImage(null)}>
+          <div className="img-popup-close" onClick={() => setSelectedImage(null)}>×</div>
+          <img 
+            src={selectedImage} 
+            alt="Full size" 
+            className="img-popup-content" 
+            onClick={(e) => e.stopPropagation()} 
+          />
+        </div>
+      )}
 
       <Footer />
     </main>
